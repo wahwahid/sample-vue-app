@@ -23,7 +23,7 @@ export default {
   },
   methods: {
     handleSubmit() {
-      const id = Date.now()
+      const id = String(Date.now()).substr(0, 10)
       this.$emit("add:contact", { id, ...this.contact })
       this.resetForm()
     },

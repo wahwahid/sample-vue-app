@@ -1,8 +1,10 @@
 <template>
   <div id="app" class="small-container">
     <h1>Contacts</h1>
+    <i v-if="message !== ''">{{ message }}</i>
     <contact-form @add:contact="addContact" />
-    <contact-list :contacts="contacts" @delete:contact="deleteContact" @update:contact="updateContact"  />
+    <h5 v-if="loadingData">Loading Data...</h5>
+    <contact-list v-else :contacts="contacts" @delete:contact="deleteContact" @update:contact="updateContact"  />
   </div>
 </template>
 <script>
@@ -18,19 +20,58 @@ export default {
   },
   data() {
     return {
-      contacts: []
+      contacts: [],
+      loadingData: true,
+      message: ''
     };
   },
-  async mounted() {
-    let res = await Contact.list()
-    this.contacts = res.data
+  mounted() {
+    this.loadContact()
   },
   methods: {
-    addContact(contact) {
-      this.contacts = [...this.contacts, contact];
+    showMessage(message) {
+      this.message = message
+      setTimeout(() => {
+        this.message = ''
+      }, 3000)
     },
-    deleteContact(id) {
-      this.contacts = this.contacts.filter(contact => contact.id !== id)
+    async loadContact() {
+      this.loadingData = true
+      let res = await Contact.list()
+      this.contacts = res.data
+      this.loadingData = false
+    },
+    async addContact(contact) {
+      try {
+        if (!contact.name || contact.name === '' || !contact.email || contact.email === '') {
+          this.showMessage('Add Contact Failed !')
+          return
+        }
+        contact.phone = ''
+        contact.address = ''
+        let res = await Contact.create(contact)
+        if (res.data === true) {
+          this.showMessage('Add Contact Success !')
+          this.loadContact()
+        } else {
+          this.showMessage('Add Contact Failed !')
+        }
+      } catch (error) {
+        this.showMessage('Add Contact Failed !')
+      }
+    },
+    async deleteContact(id) {
+      try {
+        let res = await Contact.delete(id)
+        if (res.data === true) {
+          alert('Delete Contact Success !')
+          this.loadContact()
+        } else {
+          alert('Delete Contact Failed !')
+        }
+      } catch (error) {
+        alert('Delete Contact Failed !')
+      }
     },
     updateContact(id, updatedContact) {
       this.contacts = this.contacts.map(contact =>
