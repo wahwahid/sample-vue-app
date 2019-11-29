@@ -8,6 +8,7 @@
 <script>
 import ContactList from "@/components/ContactList.vue";
 import ContactForm from "@/components/ContactForm.vue";
+import { Contact } from "./services/contact"
 
 export default {
   name: "contact-app",
@@ -17,24 +18,12 @@ export default {
   },
   data() {
     return {
-      contacts: [
-        {
-          id: 1,
-          name: "Jon Snow",
-          email: "jon@snow.north"
-        },
-        {
-          id: 2,
-          name: "Arya Stark",
-          email: "arya@stark.north"
-        },
-        {
-          id: 3,
-          name: "Daenerys Targaryen",
-          email: "danny@targaryen.dragon"
-        }
-      ]
+      contacts: []
     };
+  },
+  async mounted() {
+    let res = await Contact.list()
+    this.contacts = res.data
   },
   methods: {
     addContact(contact) {

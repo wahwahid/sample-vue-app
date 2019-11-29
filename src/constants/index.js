@@ -1,0 +1,1 @@
+export const API_URL = 'https://joglojs-contact.herokuapp.com'
