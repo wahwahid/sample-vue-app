@@ -2,7 +2,7 @@
   <div id="app" class="small-container">
     <h1>Contacts</h1>
     <contact-form @add:contact="addContact" />
-    <contact-list :contacts="contacts" />
+    <contact-list :contacts="contacts" @delete:contact="deleteContact" />
   </div>
 </template>
 <script>
@@ -39,6 +39,9 @@ export default {
   methods: {
     addContact(contact) {
       this.contacts = [...this.contacts, contact];
+    },
+    deleteContact(id) {
+      this.contacts = this.contacts.filter(contact => contact.id !== id)
     }
   }
 };
