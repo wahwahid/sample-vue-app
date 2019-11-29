@@ -2,7 +2,7 @@
   <div id="app" class="small-container">
     <h1>Contacts</h1>
     <contact-form @add:contact="addContact" />
-    <contact-list :contacts="contacts" @delete:contact="deleteContact" />
+    <contact-list :contacts="contacts" @delete:contact="deleteContact" @update:contact="updateContact"  />
   </div>
 </template>
 <script>
@@ -42,6 +42,11 @@ export default {
     },
     deleteContact(id) {
       this.contacts = this.contacts.filter(contact => contact.id !== id)
+    },
+    updateContact(id, updatedContact) {
+      this.contacts = this.contacts.map(contact =>
+        contact.id === id ? updatedContact : contact
+      )
     }
   }
 };
