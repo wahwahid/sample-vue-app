@@ -24,7 +24,14 @@ export default {
   methods: {
     handleSubmit() {
       const id = Date.now()
-      this.$emit("add:contact", { id, ...this.contact });
+      this.$emit("add:contact", { id, ...this.contact })
+      this.resetForm()
+    },
+    resetForm() {
+      this.contact = {
+        name: "",
+        email: ""
+      }
     }
   }
 };
